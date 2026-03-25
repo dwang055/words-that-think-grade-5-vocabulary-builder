@@ -3067,6 +3067,12 @@ function render() {
 
   document.getElementById('wordDisplay').textContent = entry.word;
   document.getElementById('pronDisplay').textContent = '[' + entry.pron + ']';
+  
+  // Remove any existing badge first to prevent duplicates
+  const oldBadge = document.querySelector('#pronDisplay + .badge-pos');
+  if (oldBadge) oldBadge.remove();
+  
+  // Create new badge
   const posBadgeEl = document.createElement('span');
   posBadgeEl.className = 'badge badge-pos';
   posBadgeEl.textContent = '[' + (entry.part_of_speech || '') + ']';
