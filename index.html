@@ -904,6 +904,18 @@ footer {
   font-style: italic;
   margin: 6px 0;
 }
+.flashcard-pos-display {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6ef7c8;
+  background: rgba(110, 247, 200, 0.1);
+  border: 1px solid rgba(110, 247, 200, 0.3);
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 6px 0;
+  min-height: 20px;
+}
 .flashcard-hear {
   background: var(--good15);
   border: 1px solid var(--good60);
@@ -916,6 +928,28 @@ footer {
   transition: all .15s;
   margin-left: 8px;
   display: inline-block;
+}
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(110, 247, 200, 0.15);
+  border: 1px solid rgba(110, 247, 200, 0.4);
+  color: #6ef7c8;
+  margin: 0 4px;
+}
+.badge-pos {
+  display: inline-block !important;
+  background: rgba(110, 247, 200, 0.15) !important;
+  border: 1px solid rgba(110, 247, 200, 0.4) !important;
+  color: #6ef7c8 !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  margin: 0 4px !important;
 }
 .flashcard-hear:hover {
   background: var(--good25);
@@ -1033,7 +1067,6 @@ footer {
           <button class="speak-btn" id="speakBtn2">🔊 Hear it</button>
         </div>
       </div>
-      <div class="chapter-badge" id="chapterBadge">—</div>
     </div>
 
     <div class="definition-block">
@@ -3033,8 +3066,14 @@ function render() {
   sb.classList.toggle('starred', isStarred);
 
   document.getElementById('wordDisplay').textContent = entry.word;
-  document.getElementById('pronDisplay').textContent = entry.pron;
-  document.getElementById('chapterBadge').textContent = (entry.pos || '');
+  document.getElementById('pronDisplay').textContent = '[' + entry.pron + ']';
+  const posBadgeEl = document.createElement('span');
+  posBadgeEl.className = 'badge badge-pos';
+  posBadgeEl.textContent = '[' + (entry.part_of_speech || '') + ']';
+  posBadgeEl.style.display = 'inline-block';
+  posBadgeEl.style.marginLeft = '8px';
+  document.getElementById('pronDisplay').insertAdjacentElement('afterend', posBadgeEl);
+  
   document.getElementById('defEn').textContent = entry.def_en;
   document.getElementById('defZh').textContent = entry.def_zh;
 
@@ -3960,7 +3999,7 @@ function toggleFlashcard() {
   } else {
     flashcardState.side = 'word';
     label.textContent = 'Word';
-    content.innerHTML = '<div class="flashcard-word-main">' + entry.word + '</div><div class="flashcard-pron">' + (entry.pron || '') + '</div><button class="flashcard-hear" onclick="speakFlashcard()" data-word="' + entry.word.replace(/'/g, "\\'") + '">🔊 Hear</button>';
+    content.innerHTML = '<div class="flashcard-word-main">' + entry.word + '</div>' + '<div class="flashcard-pron">[' + (entry.pron || '') + ']</div>' + '<div class="flashcard-pos-display">[' + (entry.part_of_speech || '') + ']</div>' + '<button class="flashcard-hear" onclick="speakFlashcard()" data-word="' + entry.word.replace(/'/g, "\\'") + '">🔊 Hear</button>';
     content.className = 'flashcard-content';
     inner.style.background = 'linear-gradient(160deg, rgba(14,34,48,.85), rgba(11,27,36,.95))';
   }
@@ -3981,7 +4020,7 @@ function renderFlashcard() {
   const content = document.getElementById('flashContent');
   
   label.textContent = 'Word';
-  content.textContent = entry.word;
+  content.innerHTML = '<div class="flashcard-word-main">' + entry.word + '</div><div class="flashcard-pron">[' + (entry.pron || '') + ']</div><span class="badge badge-pos">[' + (entry.part_of_speech || '') + ']</span><button class="flashcard-hear" id="flashHearBtn" onclick="speakFlashcard()">🔊 Hear</button>';
   content.className = 'flashcard-content';
   inner.style.background = 'linear-gradient(160deg, rgba(14,34,48,.85), rgba(11,27,36,.95))';
   
@@ -4054,3 +4093,4 @@ if (VOCAB.length > 1) {
 </div>
 </body>
 </html>
+
